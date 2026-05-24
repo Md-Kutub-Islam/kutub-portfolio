@@ -18,7 +18,7 @@
   /* background colors */
   --bg-white: hsla(0, 0%, 100%, 1);
   --bg-light-gray: hsla(240, 1%, 83%, 1);
-  --bg-jet: hsla(0, 0%, 18%, 1);
+  --bg-jet: rgb(13, 13, 13);
   --bg-eerie-black: hsla(0, 0%, 13%, 1);
   --bg-rich-black-fogra-29: hsla(229, 23%, 9%, 1);
   --bg-smoky-black: hsla(0, 0%, 6%, 1);

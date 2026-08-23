@@ -1,0 +1,73 @@
+---
+import { EDUCATION, CERTIFICATION } from '@data/education';
+---
+
+<section id="education" class="section-sm wrap edu">
+  <div class="flex items-center gap-4 border-t border-line pt-5" data-reveal>
+    <span class="sec-index metanum">
+      <span class="text-faint">✳</span>
+      <span class="mx-2">EDUCATION</span>
+    </span>
+  </div>
+
+  <div class="edu__grid">
+    <div class="edu__item" data-reveal>
+      <span class="edu__period metanum">{EDUCATION.period}</span>
+      <h3 class="edu__title">{EDUCATION.degree}</h3>
+      <p class="edu__org">{EDUCATION.institution}</p>
+      <p class="edu__detail">{EDUCATION.place} · CGPA {EDUCATION.cgpa}</p>
+    </div>
+
+    <div class="edu__item" data-reveal style="--reveal-delay:80ms">
+      <span class="edu__period metanum">Certification</span>
+      <h3 class="edu__title">{CERTIFICATION.title}</h3>
+      <p class="edu__org">{CERTIFICATION.issuer}</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .text-faint {
+    color: var(--color-faint);
+  }
+  .edu__grid {
+    margin-top: clamp(2.5rem, 5vh, 4rem);
+    display: grid;
+    gap: 2.5rem;
+    grid-template-columns: 1fr;
+  }
+  .edu__item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    border-top: 1px solid var(--color-line);
+    padding-top: 1.5rem;
+  }
+  .edu__period {
+    font-size: 0.8rem;
+    color: var(--color-muted);
+    letter-spacing: 0.06em;
+  }
+  .edu__title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    letter-spacing: -0.02em;
+    margin-top: 0.4rem;
+  }
+  .edu__org {
+    color: var(--color-fg);
+    font-size: 1.02rem;
+  }
+  .edu__detail {
+    color: var(--color-fg-dim);
+    font-size: 0.9rem;
+  }
+
+  @media (min-width: 720px) {
+    .edu__grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+    }
+  }
+</style>

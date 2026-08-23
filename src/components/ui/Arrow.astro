@@ -1,0 +1,26 @@
+---
+interface Props {
+  dir?: 'right' | 'down' | 'up-right' | 'left';
+  class?: string;
+  size?: number;
+}
+const { dir = 'right', class: cls = '', size = 24 } = Astro.props;
+const rot: Record<string, number> = { right: 0, down: 90, 'up-right': -45, left: 180 };
+---
+
+<svg
+  class:list={['arrow', cls]}
+  width={size}
+  height={size}
+  viewBox="0 0 24 24"
+  fill="none"
+  aria-hidden="true"
+  style={`transform: rotate(${rot[dir]}deg)`}
+>
+  <path
+    d="M5 12h14M13 6l6 6-6 6"
+    stroke="currentColor"
+    stroke-width="1.6"
+    stroke-linecap="round"
+    stroke-linejoin="round"></path>
+</svg>

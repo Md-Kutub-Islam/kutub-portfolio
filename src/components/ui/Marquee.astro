@@ -1,0 +1,55 @@
+---
+/**
+ * Seamless CSS marquee. Two identical groups animate -50% for a perfect loop.
+ * Decorative: the whole strip is aria-hidden (content is duplicated from
+ * meaningful copy elsewhere). Pauses on hover; becomes a scroll strip under
+ * reduced motion.
+ */
+interface Props {
+  items: string[];
+  speed?: number; // seconds per loop
+  dir?: 'normal' | 'reverse';
+  class?: string;
+  itemClass?: string;
+  sep?: string;
+}
+const {
+  items,
+  speed = 42,
+  dir = 'normal',
+  class: cls = '',
+  itemClass = '',
+  sep = '/',
+} = Astro.props;
+---
+
+<div class:list={['marquee', cls]} style={`--speed:${speed}s; --dir:${dir}`} aria-hidden="true">
+  <div class="marquee__track">
+    {
+      [0, 1].map(() => (
+        <div class="marquee__group">
+          {items.map((item) => (
+            <>
+              <span class:list={['marquee-item', itemClass]}>{item}</span>
+              <span class="marquee-sep" aria-hidden="true">
+                {sep}
+              </span>
+            </>
+          ))}
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .marquee-item {
+    display: inline-block;
+    white-space: nowrap;
+  }
+  .marquee-sep {
+    display: inline-block;
+    color: var(--color-accent);
+    opacity: 0.55;
+  }
+</style>

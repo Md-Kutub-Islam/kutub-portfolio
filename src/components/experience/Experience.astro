@@ -1,0 +1,232 @@
+---
+import { EXPERIENCE } from '@data/experience';
+import SectionHeading from '@components/ui/SectionHeading.astro';
+import Arrow from '@components/ui/Arrow.astro';
+---
+
+<section id="experience" class="section wrap xp-sec">
+  <SectionHeading
+    index="04"
+    label="Experience"
+    lines={['Where', "I've worked."]}
+    note="Professional history"
+  />
+
+  <div class="xp-list">
+    {
+      EXPERIENCE.map((job, i) => (
+        <article class="xp" data-reveal style={`--reveal-delay:${i * 80}ms`}>
+          <div class="xp__aside">
+            <span class="xp__node" aria-hidden="true" />
+            <div class="xp__period metanum">{job.period}</div>
+            {job.location && <div class="xp__loc">{job.location}</div>}
+          </div>
+
+          <div class="xp__body">
+            <h3 class="xp__role">{job.role}</h3>
+            <p class="xp__company">{job.company}</p>
+            <p class="xp__summary">{job.summary}</p>
+
+            <ul class="xp__points">
+              {job.primary.map((p) => (
+                <li>{p}</li>
+              ))}
+            </ul>
+
+            {job.more.length > 0 && (
+              <>
+                <div class="xp__more" id={`xp-more-${i}`}>
+                  <div class="xp__more-inner">
+                    <ul class="xp__points">
+                      {job.more.map((p) => (
+                        <li>{p}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  class="xp__toggle"
+                  data-expand="Show more"
+                  aria-controls={`xp-more-${i}`}
+                  aria-expanded="false"
+                >
+                  <span data-expand-label>Show more</span>
+                  <span class="xp__toggle-ico" aria-hidden="true">
+                    <Arrow dir="down" size={16} />
+                  </span>
+                </button>
+              </>
+            )}
+
+            <ul class="xp__tags" aria-label="Technologies">
+              {job.tags.map((t) => (
+                <li>{t}</li>
+              ))}
+            </ul>
+          </div>
+        </article>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .xp-list {
+    margin-top: clamp(3rem, 7vh, 6rem);
+    display: grid;
+    gap: clamp(2.5rem, 6vh, 4.5rem);
+  }
+  .xp {
+    display: grid;
+    gap: 1.25rem 2.5rem;
+    grid-template-columns: 1fr;
+  }
+
+  .xp__aside {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding-left: 1.5rem;
+  }
+  .xp__node {
+    position: absolute;
+    left: 0;
+    top: 0.45rem;
+    width: 9px;
+    height: 9px;
+    border-radius: 999px;
+    background: var(--color-accent);
+  }
+  .xp__node::before {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 14px;
+    width: 1px;
+    height: 200px;
+    background: linear-gradient(var(--color-line-strong), transparent);
+  }
+  .xp__period {
+    font-size: 0.9rem;
+    color: var(--color-fg);
+    letter-spacing: 0.02em;
+  }
+  .xp__loc {
+    font-size: 0.8rem;
+    color: var(--color-muted);
+  }
+
+  .xp__role {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.6rem, 4vw, 2.6rem);
+    letter-spacing: -0.03em;
+    line-height: 1.02;
+  }
+  .xp__company {
+    margin-top: 0.5rem;
+    color: var(--color-accent);
+    font-size: 1.02rem;
+    font-weight: 500;
+  }
+  .xp__summary {
+    margin-top: 1.1rem;
+    max-width: 60ch;
+    color: var(--color-fg-dim);
+    line-height: 1.6;
+    text-wrap: pretty;
+  }
+
+  .xp__points {
+    margin-top: 1.5rem;
+    display: grid;
+    gap: 0.7rem;
+    max-width: 62ch;
+  }
+  .xp__points li {
+    position: relative;
+    padding-left: 1.5rem;
+    color: var(--color-fg-dim);
+    line-height: 1.5;
+  }
+  .xp__points li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.6em;
+    width: 7px;
+    height: 1px;
+    background: var(--color-muted);
+  }
+
+  /* Expandable "more" region */
+  .xp__more {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.5s var(--ease-out);
+  }
+  .xp__more-inner {
+    overflow: hidden;
+  }
+  .xp__more[data-open] {
+    grid-template-rows: 1fr;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .xp__more {
+      transition: none;
+    }
+  }
+
+  .xp__toggle {
+    margin-top: 1.4rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-fg-dim);
+    transition: color 0.3s var(--ease-out);
+  }
+  .xp__toggle:hover {
+    color: var(--color-fg);
+  }
+  .xp__toggle-ico {
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    border: 1px solid var(--color-line-strong);
+    border-radius: 999px;
+    transition: transform 0.4s var(--ease-out);
+  }
+  .xp__toggle[aria-expanded='true'] .xp__toggle-ico {
+    transform: rotate(180deg);
+  }
+
+  .xp__tags {
+    margin-top: 1.8rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .xp__tags li {
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    padding: 0.34rem 0.8rem;
+    font-size: 0.76rem;
+    color: var(--color-fg-dim);
+  }
+
+  @media (min-width: 820px) {
+    .xp {
+      grid-template-columns: 220px 1fr;
+    }
+    .xp__node::before {
+      height: 320px;
+    }
+  }
+</style>

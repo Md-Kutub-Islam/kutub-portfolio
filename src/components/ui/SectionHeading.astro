@@ -1,0 +1,47 @@
+---
+import RevealText from './RevealText.astro';
+
+interface Props {
+  index: string; // "01"
+  label: string; // "ABOUT"
+  lines: string[]; // heading, one entry per visual line
+  note?: string; // optional right-aligned meta
+  id?: string;
+  headingClass?: string;
+  class?: string;
+}
+const {
+  index,
+  label,
+  lines,
+  note,
+  id,
+  headingClass = 't-display',
+  class: cls = '',
+} = Astro.props;
+---
+
+<header class:list={['sec-head', cls]}>
+  <div class="flex items-center justify-between gap-4 border-t border-line pt-5" data-reveal>
+    <span class="sec-index metanum">
+      <span aria-hidden="true">{index}</span>
+      <span class="mx-2 text-faint">/</span>
+      <span>{label}</span>
+    </span>
+    {note && <span class="sec-index metanum hidden sm:block">{note}</span>}
+  </div>
+
+  <RevealText
+    as="h2"
+    id={id}
+    lines={lines}
+    class={`display ${headingClass} mt-8 sm:mt-12`}
+    step={90}
+  />
+</header>
+
+<style>
+  .text-faint {
+    color: var(--color-faint);
+  }
+</style>

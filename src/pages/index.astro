@@ -1,0 +1,49 @@
+---
+import Layout from '@layouts/Layout.astro';
+import Hero from '@components/hero/Hero.astro';
+import Marquee from '@components/ui/Marquee.astro';
+import About from '@components/about/About.astro';
+import Projects from '@components/projects/Projects.astro';
+import Stack from '@components/stack/Stack.astro';
+import Experience from '@components/experience/Experience.astro';
+import Process from '@components/process/Process.astro';
+import Builder from '@components/builder/Builder.astro';
+import Education from '@components/education/Education.astro';
+import Contact from '@components/contact/Contact.astro';
+---
+
+<Layout>
+  <Hero />
+
+  <div class="name-marquee" aria-hidden="true">
+    <Marquee
+      items={['Md Kutub Islam', 'Frontend Engineer', 'Product Builder', 'Full-Stack Capable']}
+      speed={46}
+      itemClass="name-marquee__item"
+      sep="✳"
+    />
+  </div>
+
+  <About />
+  <Projects />
+  <Stack />
+  <Experience />
+  <Process />
+  <Builder />
+  <Education />
+  <Contact />
+</Layout>
+
+<style>
+  .name-marquee {
+    border-block: 1px solid var(--color-line);
+    padding-block: clamp(1.1rem, 2.6vh, 1.8rem);
+  }
+  .name-marquee :global(.name-marquee__item) {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.5rem, 4vw, 3rem);
+    letter-spacing: -0.02em;
+    color: var(--color-fg-dim);
+  }
+</style>

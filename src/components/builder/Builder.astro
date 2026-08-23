@@ -1,0 +1,56 @@
+---
+import { SITE } from '@data/site';
+
+const statement =
+  'I build products end to end — the interface, the logic, and the parts in between. I care about how something feels to use, not only whether it works.';
+const words = statement.split(' ');
+---
+
+<section id="builder" class="section wrap builder">
+  <div class="flex items-center gap-4 border-t border-line pt-5" data-reveal>
+    <span class="sec-index metanum">
+      <span class="text-faint">✳</span>
+      <span class="mx-2">APPROACH</span>
+    </span>
+  </div>
+
+  <blockquote class="builder__statement read-dim">
+    {words.map((w) => <span class="word">{w} </span>)}
+  </blockquote>
+
+  <footer class="builder__sign" data-reveal>
+    <span class="builder__mark" aria-hidden="true">—</span>
+    <span>{SITE.name}, {SITE.role}</span>
+  </footer>
+</section>
+
+<style>
+  .text-faint {
+    color: var(--color-faint);
+  }
+  .builder__statement {
+    margin-top: clamp(2.5rem, 6vh, 5rem);
+    max-width: 22ch;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.9rem, 5.2vw, 4.2rem);
+    line-height: 1.12;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+  .builder__statement .word {
+    display: inline-block;
+    white-space: pre;
+  }
+  .builder__sign {
+    margin-top: clamp(2rem, 5vh, 3.5rem);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.95rem;
+    color: var(--color-fg-dim);
+  }
+  .builder__mark {
+    color: var(--color-accent);
+  }
+</style>

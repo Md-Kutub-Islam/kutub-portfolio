@@ -1,0 +1,102 @@
+---
+import { SITE } from '@data/site';
+/**
+ * Very short intro. Plays once per session (html.entered hides it on later
+ * navigations). Self-hides via a CSS animation with `forwards`, so it can never
+ * block the page — even without JS. Near-instant under reduced motion.
+ */
+---
+
+<div class="loader" id="loader" aria-hidden="true">
+  <div class="loader__inner">
+    <span class="loader__k display">{SITE.initial}</span>
+    <span class="loader__name metanum">{SITE.name}</span>
+  </div>
+  <div class="loader__bar"></div>
+</div>
+
+<style>
+  .loader {
+    position: fixed;
+    inset: 0;
+    z-index: 150;
+    background: var(--color-bg);
+    display: grid;
+    place-items: center;
+    animation: loader-out 0.6s var(--ease-out) 0.75s forwards;
+  }
+  html.entered .loader {
+    display: none;
+  }
+
+  .loader__inner {
+    display: flex;
+    align-items: baseline;
+    gap: 0.9rem;
+    overflow: hidden;
+    padding-bottom: 0.1em;
+  }
+  .loader__k {
+    font-size: clamp(3rem, 8vw, 5rem);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    transform: translateY(110%);
+    animation: rise 0.65s var(--ease-out) 0.05s forwards;
+  }
+  .loader__name {
+    font-size: clamp(0.7rem, 1.6vw, 0.85rem);
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--color-fg-dim);
+    opacity: 0;
+    animation: fade 0.6s ease 0.35s forwards;
+  }
+  .loader__bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    width: 100%;
+    background: var(--color-accent);
+    transform-origin: 0 50%;
+    transform: scaleX(0);
+    animation: bar 0.85s var(--ease-out) forwards;
+  }
+
+  @keyframes rise {
+    to {
+      transform: translateY(0);
+    }
+  }
+  @keyframes fade {
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes bar {
+    to {
+      transform: scaleX(1);
+    }
+  }
+  @keyframes loader-out {
+    to {
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-1.5%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .loader {
+      animation: loader-out 0.2s ease 0.35s forwards;
+    }
+    .loader__k,
+    .loader__name,
+    .loader__bar {
+      animation: none;
+      transform: none;
+      opacity: 1;
+    }
+  }
+</style>

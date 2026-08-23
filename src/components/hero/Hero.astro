@@ -1,0 +1,317 @@
+---
+import { SITE } from '@data/site';
+import RevealText from '@components/ui/RevealText.astro';
+import Arrow from '@components/ui/Arrow.astro';
+---
+
+<section class="hero">
+  <div class="wrap hero__inner">
+    <div class="hero__label">
+      <span class="eyebrow" data-reveal style="--reveal-delay:250ms">{SITE.name}</span>
+      <span class="eyebrow hero__role" data-reveal style="--reveal-delay:330ms">
+        {SITE.role} <i aria-hidden="true">—</i> Full-Stack Capable
+      </span>
+    </div>
+
+    <div class="hero__main">
+      <div class="hero__display">
+        <h1 class="hero__title display">
+          <RevealText
+            as="span"
+            lines={['Building', 'Digital', "Products<span class='ac'>.</span>"]}
+            baseDelay={480}
+            step={95}
+          />
+        </h1>
+        <p class="hero__title2 display" aria-label="From interface to backend.">
+          <RevealText
+            as="span"
+            lines={['From interface', "to backend<span class='ac'>.</span>"]}
+            baseDelay={760}
+            step={95}
+          />
+        </p>
+      </div>
+
+      <div class="hero__photo-wrapper" data-reveal="photo" style="--reveal-delay:880ms" data-hero-parallax>
+        <div class="hero__photo-card">
+          <img
+            src="/images/profile.jpg"
+            alt="Md Kutub Islam — Frontend & Full-Stack Engineer"
+            class="hero__photo-img"
+            loading="eager"
+            decoding="async"
+            fetchpriority="high"
+            width="360"
+            height="480"
+          />
+          <div class="hero__photo-overlay" aria-hidden="true"></div>
+          <div class="hero__photo-badge">
+            <span class="hero__photo-dot" aria-hidden="true"></span>
+            <span class="hero__photo-name">Md Kutub Islam</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero__foot">
+      <div class="hero__foot-left">
+        <p class="hero__desc" data-reveal style="--reveal-delay:980ms">
+          I build modern web products with a strong focus on frontend experience,
+          performance, accessibility and practical full-stack architecture.
+        </p>
+        <ul class="hero__meta" data-reveal style="--reveal-delay:1060ms">
+          <li>{SITE.locationLong}</li>
+          <li>{SITE.openTo}</li>
+        </ul>
+      </div>
+
+      <a href="#about" class="hero__scroll" data-reveal style="--reveal-delay:1140ms" data-navlink>
+        <span class="hero__scroll-text">Scroll to explore</span>
+        <span class="hero__scroll-cue" aria-hidden="true">
+          <Arrow dir="down" size={18} />
+        </span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    align-items: stretch;
+  }
+  .hero__inner {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: clamp(2rem, 4vh, 3.5rem);
+    padding-top: calc(72px + clamp(1.5rem, 5vh, 3.5rem));
+    padding-bottom: clamp(1.5rem, 4vh, 3rem);
+    width: 100%;
+  }
+
+  .hero__label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+  .hero__role i {
+    color: var(--color-accent);
+    font-style: normal;
+    padding: 0 0.3em;
+  }
+
+  .hero__main {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1.5rem, 3.5vh, 2.5rem);
+  }
+
+  .hero__title {
+    font-size: clamp(2.8rem, 9.8vw, 9.8rem);
+    font-weight: 700;
+    letter-spacing: -0.045em;
+    line-height: 0.88;
+  }
+  .hero__title2 {
+    margin-top: clamp(0.5rem, 1.4vh, 1.1rem);
+    font-size: clamp(1.45rem, 4.6vw, 4rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 0.92;
+    color: var(--color-fg-dim);
+  }
+  .hero :global(.ac) {
+    color: var(--color-accent);
+  }
+
+  /* Integrated Editorial Hero Photo --------------------------------------- */
+  .hero__photo-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 260px;
+    margin-top: 0.5rem;
+    z-index: 2;
+    transform: translateY(var(--hero-scroll-y, 0px));
+    will-change: transform;
+  }
+
+  .hero__photo-card {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    border-radius: var(--radius-card);
+    border: 1px solid var(--color-line-strong);
+    background: var(--color-surface);
+    overflow: hidden;
+    box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.7);
+    transition: border-color 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out);
+  }
+
+  .hero__photo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 20%;
+    display: block;
+    transition: transform 0.6s var(--ease-out);
+  }
+
+  .hero__photo-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      180deg,
+      transparent 55%,
+      rgba(10, 10, 11, 0.75) 100%
+    );
+  }
+
+  .hero__photo-badge {
+    position: absolute;
+    bottom: 0.85rem;
+    left: 0.85rem;
+    right: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.75rem;
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--color-bg) 82%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--color-line);
+    font-size: 0.74rem;
+    letter-spacing: 0.04em;
+    color: var(--color-fg);
+  }
+
+  .hero__photo-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--color-accent);
+    flex: none;
+  }
+
+  .hero__photo-name {
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .hero__photo-card:hover {
+      border-color: color-mix(in oklab, var(--color-accent) 45%, transparent);
+      box-shadow: 0 25px 50px -20px rgba(0, 0, 0, 0.9), 0 0 30px -10px color-mix(in oklab, var(--color-accent) 15%, transparent);
+    }
+    .hero__photo-card:hover .hero__photo-img {
+      transform: scale(1.04);
+    }
+  }
+
+  .hero__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem 2rem;
+  }
+  .hero__foot-left {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    max-width: 46ch;
+  }
+  .hero__desc {
+    color: var(--color-fg-dim);
+    font-size: clamp(0.98rem, 1.4vw, 1.1rem);
+    line-height: 1.6;
+    text-wrap: pretty;
+  }
+  .hero__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem 1.5rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    color: var(--color-muted);
+  }
+  .hero__meta li {
+    position: relative;
+    padding-left: 1.1rem;
+  }
+  .hero__meta li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.5em;
+    width: 5px;
+    height: 5px;
+    border-radius: 999px;
+    background: var(--color-accent);
+    opacity: 0.7;
+  }
+
+  .hero__scroll {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-fg-dim);
+    transition: color 0.3s var(--ease-out);
+  }
+  .hero__scroll:hover {
+    color: var(--color-fg);
+  }
+  .hero__scroll-cue {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border: 1px solid var(--color-line-strong);
+    border-radius: 999px;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .hero__scroll-cue :global(svg) {
+      animation: bob 1.9s var(--ease-in-out) infinite;
+    }
+  }
+  @keyframes bob {
+    0%,
+    100% {
+      transform: rotate(90deg) translateX(0);
+    }
+    50% {
+      transform: rotate(90deg) translateX(3px);
+    }
+  }
+
+  @media (min-width: 960px) {
+    .hero__main {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: flex-end;
+      gap: clamp(2rem, 4vw, 4.5rem);
+    }
+    .hero__photo-wrapper {
+      max-width: clamp(210px, 20vw, 300px);
+      margin-top: 0;
+      margin-bottom: 0.3rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero__label {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+  }
+</style>

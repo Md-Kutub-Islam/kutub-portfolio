@@ -1,0 +1,56 @@
+---
+import { PROJECTS } from '@data/projects';
+import SectionHeading from '@components/ui/SectionHeading.astro';
+import Marquee from '@components/ui/Marquee.astro';
+import ProjectItem from './ProjectItem.astro';
+
+const total = PROJECTS.length;
+---
+
+<section id="work" class="work">
+  <div class="wrap">
+    <SectionHeading
+      index="02"
+      label="Selected Work"
+      lines={['Things', "I've built."]}
+      note="Product · Full-stack"
+    />
+  </div>
+
+  <div class="work__marquee" aria-hidden="true">
+    <Marquee
+      items={['Build', 'Ship', 'Learn', 'Iterate']}
+      speed={38}
+      itemClass="work__mq-item"
+      sep="—"
+    />
+  </div>
+
+  <div class="pstack" data-project-stack>
+    {PROJECTS.map((project, i) => <ProjectItem project={project} i={i} total={total} />)}
+  </div>
+</section>
+
+<style>
+  .work {
+    padding-top: clamp(4.5rem, 11vh, 10rem);
+  }
+  .work__marquee {
+    margin-top: clamp(3rem, 7vh, 6rem);
+    padding-block: clamp(1.25rem, 3vh, 2.25rem);
+    border-block: 1px solid var(--color-line);
+  }
+  .work :global(.work__mq-item) {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2rem, 6vw, 4.5rem);
+    letter-spacing: -0.03em;
+    color: var(--color-fg);
+    text-transform: uppercase;
+  }
+
+  /* Stacking context so sticky cards layer predictably */
+  .pstack {
+    position: relative;
+  }
+</style>

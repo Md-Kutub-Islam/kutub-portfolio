@@ -1,0 +1,139 @@
+---
+import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+import { SITE, LINKS, has } from '@data/site';
+import Nav from '@components/nav/Nav.astro';
+import Footer from '@components/footer/Footer.astro';
+import Loader from '@components/motion/Loader.astro';
+import CustomCursor from '@components/motion/CustomCursor.astro';
+import ScrollProgress from '@components/motion/ScrollProgress.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  type?: 'website' | 'article';
+  noLoader?: boolean;
+}
+
+const {
+  title = SITE.title,
+  description = SITE.description,
+  image = '/og-image.png',
+  type = 'website',
+  noLoader = false,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site ?? SITE.url).toString();
+const ogImage = new URL(image, Astro.site ?? SITE.url).toString();
+
+const sameAs = [LINKS.github, LINKS.linkedin, LINKS.twitter].filter((u) => has(u));
+
+const personLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: SITE.name,
+  url: SITE.url,
+  jobTitle: 'Frontend Engineer',
+  email: `mailto:${SITE.email}`,
+  description: SITE.description,
+  address: { '@type': 'PostalAddress', addressCountry: 'IN' },
+  knowsAbout: [
+    'Frontend Engineering',
+    'Full-Stack Development',
+    'Vue.js',
+    'React.js',
+    'TypeScript',
+    'Node.js',
+    'PostgreSQL',
+    'Accessibility',
+  ],
+  ...(sameAs.length ? { sameAs } : {}),
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Pre-paint state: enable JS reveals, respect reduced motion, skip loader
+         on later navigations. Inline so it runs before first paint (no FOUC). -->
+    <script is:inline>
+      (function () {
+        var d = document.documentElement;
+        d.classList.add('js');
+        try {
+          if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            d.classList.add('reduce-motion');
+          }
+          if (sessionStorage.getItem('kip-entered')) d.classList.add('entered');
+        } catch (e) {}
+      })();
+    </script>
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="author" content={SITE.name} />
+    <meta name="theme-color" content="#0a0a0b" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Icons -->
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${SITE.name} — ${SITE.role}`} />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={JSON.stringify(personLd)}
+    />
+
+    <ClientRouter />
+  </head>
+
+  <body>
+    <a href="#top" class="skip-link">Skip to content</a>
+
+    {!noLoader && <Loader />}
+    <ScrollProgress />
+    <CustomCursor />
+    <Nav />
+
+    <main id="top">
+      <slot />
+    </main>
+
+    <Footer />
+
+    <!-- Centralized motion controller. Self-registers astro:page-load /
+         astro:before-swap; imported once, runs across View Transitions. -->
+    <script>
+      import '@scripts/motion.ts';
+    </script>
+  </body>
+</html>

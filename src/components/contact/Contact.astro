@@ -1,0 +1,139 @@
+---
+import { SITE, LINKS, has } from '@data/site';
+import RevealText from '@components/ui/RevealText.astro';
+import Arrow from '@components/ui/Arrow.astro';
+
+const socials = [
+  { label: 'GitHub', url: LINKS.github },
+  { label: 'LinkedIn', url: LINKS.linkedin },
+  { label: 'Twitter', url: LINKS.twitter },
+  { label: 'Résumé', url: LINKS.resume, isDownload: true },
+].filter((s) => has(s.url));
+---
+
+<section id="contact" class="contact">
+  <div class="wrap contact__inner">
+    <div class="flex items-center justify-between gap-4 border-t border-line pt-5" data-reveal>
+      <span class="sec-index metanum">
+        <span aria-hidden="true">05</span>
+        <span class="mx-2 text-faint">/</span>
+        <span>Contact</span>
+      </span>
+      <span class="sec-index metanum contact__avail">
+        <span class="status-dot" aria-hidden="true"></span>
+        {SITE.availability}
+      </span>
+    </div>
+
+    <h2 class="contact__title display">
+      <RevealText as="span" lines={["Let's build", 'something', 'worth using.']} step={90} />
+    </h2>
+
+    <div class="contact__actions" data-reveal style="--reveal-delay:120ms">
+      <a class="contact__email" href={`mailto:${SITE.email}`} data-cursor="hover">
+        <span class="contact__email-text">{SITE.email}</span>
+        <span class="contact__email-ico" aria-hidden="true"><Arrow dir="up-right" size={28} /></span>
+      </a>
+    </div>
+
+    <div class="contact__foot" data-reveal style="--reveal-delay:200ms">
+      <p class="contact__note">
+        {SITE.openTo}. Based in {SITE.location}, working with teams anywhere.
+      </p>
+      {
+        socials.length > 0 && (
+          <ul class="contact__socials">
+            {socials.map((s) => (
+              <li>
+                <a
+                  class="link"
+                  href={s.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  download={s.isDownload ? 'Kutub_Islam_Frontend_Engineer_Resume.pdf' : undefined}
+                >
+                  {s.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact {
+    padding-block: clamp(5rem, 14vh, 12rem);
+  }
+  .text-faint {
+    color: var(--color-faint);
+  }
+  .contact__avail {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--color-fg-dim);
+    text-transform: none;
+    letter-spacing: 0.04em;
+  }
+  .contact__title {
+    margin-top: clamp(2.5rem, 6vh, 5rem);
+    font-size: clamp(2.8rem, 11vw, 11rem);
+    letter-spacing: -0.045em;
+    line-height: 0.92;
+  }
+
+  .contact__actions {
+    margin-top: clamp(2.5rem, 6vh, 4.5rem);
+  }
+  .contact__email {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.4rem, 4.5vw, 3rem);
+    letter-spacing: -0.02em;
+    color: var(--color-fg);
+    transition: color 0.3s var(--ease-out);
+    word-break: break-word;
+  }
+  .contact__email-ico {
+    display: inline-grid;
+    place-items: center;
+    flex: none;
+    transition: transform 0.4s var(--ease-out);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .contact__email:hover {
+      color: var(--color-accent);
+    }
+    .contact__email:hover .contact__email-ico {
+      transform: translate(4px, -4px);
+    }
+  }
+
+  .contact__foot {
+    margin-top: clamp(3rem, 8vh, 6rem);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem 2rem;
+    border-top: 1px solid var(--color-line);
+    padding-top: 2rem;
+  }
+  .contact__note {
+    max-width: 40ch;
+    color: var(--color-fg-dim);
+    line-height: 1.6;
+  }
+  .contact__socials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    font-size: 0.95rem;
+  }
+</style>

@@ -1,0 +1,382 @@
+---
+import { NAV, SITE, LINKS, has } from '@data/site';
+import Arrow from '@components/ui/Arrow.astro';
+
+const socials = [
+  { label: 'GitHub', url: LINKS.github },
+  { label: 'LinkedIn', url: LINKS.linkedin },
+  { label: 'Twitter', url: LINKS.twitter },
+  { label: 'Résumé', url: LINKS.resume, isDownload: true },
+].filter((s) => has(s.url));
+---
+
+<header class="nav" data-nav>
+  <div class="nav__row wrap">
+    <a href="#top" class="nav__logo" aria-label={`${SITE.name} — home`}>
+      <span class="nav__logo-full">{SITE.shortName}</span><span class="nav__logo-dot">.</span>
+    </a>
+
+    <nav class="nav__links" aria-label="Primary">
+      <ul>
+        {
+          NAV.map((item) => (
+            <li>
+              <a href={item.href} class="nav__link link" data-navlink>
+                <span class="nav__num metanum" aria-hidden="true">
+                  {item.num}
+                </span>
+                <span>{item.label}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="nav__right">
+      {
+        SITE.availability && (
+          <span class="nav__status" title={SITE.availability}>
+            <span class="status-dot" />
+            <span class="nav__status-text">{SITE.availability}</span>
+          </span>
+        )
+      }
+      <button
+        id="menu-toggle"
+        class="nav__burger"
+        type="button"
+        aria-expanded="false"
+        aria-controls="menu"
+        aria-label="Open menu"
+      >
+        <span class="nav__burger-lines" aria-hidden="true"></span>
+        <span class="nav__burger-label">Menu</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Full-screen navigation overlay -->
+<div id="menu" class="menu" aria-hidden="true">
+  <div class="menu__bg"></div>
+  <div class="menu__body wrap">
+    <nav aria-label="Mobile">
+      <ul class="menu__list">
+        {
+          NAV.map((item, i) => (
+            <li class="menu__item" style={`--i:${i}`}>
+              <a href={item.href} class="menu__link">
+                <span class="menu__num metanum">{item.num}</span>
+                <span class="menu__label display">{item.label}</span>
+                <Arrow dir="up-right" class="menu__arrow" size={28} />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="menu__foot" style={`--i:${NAV.length}`}>
+      <span class="menu__avail">
+        <span class="status-dot"></span>
+        {SITE.availability}
+      </span>
+      <a href={`mailto:${SITE.email}`} class="menu__email link">{SITE.email}</a>
+      {
+        socials.length > 0 && (
+          <span class="menu__socials">
+            {socials.map((s) => (
+              <a
+                href={s.url}
+                class="link"
+                target="_blank"
+                rel="noopener noreferrer"
+                download={s.isDownload ? 'Kutub_Islam_Frontend_Engineer_Resume.pdf' : undefined}
+              >
+                {s.label}
+              </a>
+            ))}
+          </span>
+        )
+      }
+    </div>
+  </div>
+</div>
+
+<style>
+  .nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    transition: background 0.4s var(--ease-out), border-color 0.4s var(--ease-out);
+    border-bottom: 1px solid transparent;
+  }
+  :global(html.scrolled) .nav {
+    background: color-mix(in oklab, var(--color-bg) 72%, transparent);
+    backdrop-filter: blur(14px) saturate(140%);
+    border-bottom-color: var(--color-line);
+  }
+  :global(html.menu-open) .nav {
+    background: transparent;
+    backdrop-filter: none;
+    border-bottom-color: transparent;
+  }
+
+  .nav__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    height: 72px;
+  }
+
+  .nav__logo {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.15rem;
+    letter-spacing: -0.03em;
+    z-index: 101;
+  }
+  .nav__logo-dot {
+    color: var(--color-accent);
+  }
+
+  .nav__links {
+    display: none;
+  }
+  .nav__links ul {
+    display: flex;
+    gap: clamp(1rem, 2vw, 2.2rem);
+  }
+  .nav__link {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--color-fg-dim);
+    transition: color 0.3s var(--ease-out);
+  }
+  .nav__link:hover,
+  .nav__link[data-active] {
+    color: var(--color-fg);
+  }
+  .nav__num {
+    font-size: 0.65rem;
+    color: var(--color-muted);
+  }
+  .nav__link[data-active] .nav__num {
+    color: var(--color-accent);
+  }
+
+  .nav__right {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    z-index: 101;
+  }
+  .nav__status {
+    display: none;
+    align-items: center;
+    gap: 0.55rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-fg-dim);
+  }
+
+  .nav__burger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-fg);
+    padding: 0.4rem 0.2rem;
+  }
+  .nav__burger-lines {
+    position: relative;
+    width: 22px;
+    height: 10px;
+  }
+  .nav__burger-lines::before,
+  .nav__burger-lines::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 1.5px;
+    background: currentColor;
+    transition: transform 0.35s var(--ease-out), top 0.35s var(--ease-out);
+  }
+  .nav__burger-lines::before {
+    top: 0;
+  }
+  .nav__burger-lines::after {
+    top: 8px;
+  }
+  :global(html.menu-open) .nav__burger-lines::before {
+    top: 4px;
+    transform: rotate(45deg);
+  }
+  :global(html.menu-open) .nav__burger-lines::after {
+    top: 4px;
+    transform: rotate(-45deg);
+  }
+
+  /* Overlay ---------------------------------------------------------------- */
+  .menu {
+    position: fixed;
+    inset: 0;
+    z-index: 99;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .menu.is-open {
+    visibility: visible;
+    pointer-events: auto;
+  }
+  .menu__bg {
+    position: absolute;
+    inset: 0;
+    background: var(--color-bg-soft);
+    clip-path: inset(0 0 100% 0);
+    transition: clip-path 0.6s var(--ease-drawer);
+  }
+  .menu.is-open .menu__bg {
+    clip-path: inset(0 0 0 0);
+  }
+
+  .menu__body {
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    /* Clear the fixed 72px nav so the centered list sits balanced below it */
+    padding-top: 72px;
+    padding-bottom: max(32px, env(safe-area-inset-bottom));
+  }
+
+  .menu__body > nav {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+  .menu__list {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: clamp(0.5rem, 2.5vw, 1.4rem);
+  }
+  .menu__item {
+    overflow: hidden;
+  }
+  .menu__link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.15em 0;
+  }
+  .menu__num {
+    font-size: 0.8rem;
+    color: var(--color-muted);
+    width: 2rem;
+  }
+  .menu__label {
+    font-size: clamp(2.5rem, 12vw, 5.5rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    transition: color 0.3s var(--ease-out);
+  }
+  .menu__arrow {
+    margin-left: auto;
+    opacity: 0;
+    transform: translateX(-8px);
+    transition: opacity 0.3s var(--ease-out), transform 0.3s var(--ease-out);
+    color: var(--color-fg-dim);
+  }
+  @media (hover: hover) {
+    .menu__link:hover .menu__label {
+      color: var(--color-accent);
+    }
+    .menu__link:hover .menu__arrow {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .menu__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.75rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-line);
+    font-size: 0.9rem;
+    color: var(--color-fg-dim);
+  }
+  .menu__avail {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 0.72rem;
+  }
+  .menu__socials {
+    display: inline-flex;
+    gap: 1.25rem;
+    margin-left: auto;
+  }
+
+  /* Staggered entrance for overlay items */
+  .menu__item .menu__link,
+  .menu__foot {
+    transform: translateY(120%);
+    opacity: 0;
+    transition: transform 0.6s var(--ease-out), opacity 0.6s var(--ease-out);
+  }
+  .menu.is-open .menu__item .menu__link,
+  .menu.is-open .menu__foot {
+    transform: translateY(0);
+    opacity: 1;
+    transition-delay: calc(var(--i) * 55ms + 220ms);
+  }
+
+  @media (min-width: 1024px) {
+    .nav__links {
+      display: block;
+    }
+    .nav__status {
+      display: inline-flex;
+    }
+    .nav__burger {
+      display: none;
+    }
+    .menu {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .menu__bg {
+      transition: clip-path 0.25s ease;
+    }
+    .menu__item .menu__link,
+    .menu__foot {
+      transition: opacity 0.25s ease;
+      transform: none;
+    }
+    .menu.is-open .menu__item .menu__link,
+    .menu.is-open .menu__foot {
+      transition-delay: 0.1s;
+    }
+  }
+</style>

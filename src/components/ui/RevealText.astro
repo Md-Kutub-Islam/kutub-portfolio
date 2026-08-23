@@ -1,0 +1,37 @@
+---
+/**
+ * Line-by-line masked reveal for editorial headings.
+ * Each line sits in an overflow-clipped block; its inner span slides up.
+ * Degrades to plain, fully-visible text with no JS or under reduced motion.
+ */
+type Tag = 'h1' | 'h2' | 'h3' | 'p' | 'span' | 'div';
+interface Props {
+  lines: string[];
+  as?: Tag;
+  class?: string;
+  lineClass?: string;
+  baseDelay?: number;
+  step?: number;
+  id?: string;
+}
+const {
+  lines,
+  as: TagName = 'span',
+  class: cls = '',
+  lineClass = '',
+  baseDelay = 0,
+  step = 85,
+  id,
+} = Astro.props as Props;
+const El = TagName as any;
+---
+
+<El class:list={[cls]} id={id}>
+  {
+    lines.map((line, i) => (
+      <span data-line style={`--reveal-delay:${baseDelay + i * step}ms`}>
+        <span class:list={[lineClass]} set:html={line} />
+      </span>
+    ))
+  }
+</El>

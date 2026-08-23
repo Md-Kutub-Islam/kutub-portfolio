@@ -1,0 +1,5 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Kutub">
+  <rect width="64" height="64" rx="14" fill="#0a0a0b"/>
+  <path d="M20 15 L20 49 M20 33 L40 15 M25 31 L42 49" fill="none" stroke="#eceae4" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="46" cy="19" r="3.4" fill="#f6efe1"/>
+</svg>

@@ -1,0 +1,107 @@
+---
+import SectionHeading from '@components/ui/SectionHeading.astro';
+
+const lead =
+  "I'm a frontend engineer with full-stack experience, focused on building responsive interfaces, SaaS products and practical web applications. I enjoy taking a product from an idea or a messy requirement to a working experience.";
+const words = lead.split(' ');
+
+const focus = [
+  'Frontend experience',
+  'Full-stack architecture',
+  'SaaS & product work',
+  'AI-powered apps',
+];
+const tools = ['Vue.js', 'React.js', 'Node.js', 'PostgreSQL', 'Astro.js', 'Tauri'];
+---
+
+<section id="about" class="section wrap">
+  <SectionHeading
+    index="01"
+    label="About"
+    lines={['I like building', 'things that', 'people actually use.']}
+    note="Frontend · Full-stack"
+  />
+
+  <div class="about__grid">
+    <div class="about__lead">
+      <p class="about__read read-dim">
+        {words.map((w) => <span class="word">{w} </span>)}
+      </p>
+    </div>
+
+    <aside class="about__side">
+      <div class="about__block" data-reveal>
+        <span class="eyebrow">Focus</span>
+        <ul>
+          {focus.map((f) => <li>{f}</li>)}
+        </ul>
+      </div>
+      <div class="about__block" data-reveal style="--reveal-delay:90ms">
+        <span class="eyebrow">Core tools</span>
+        <ul class="about__tags">
+          {tools.map((t) => <li>{t}</li>)}
+        </ul>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<style>
+  .about__grid {
+    display: grid;
+    gap: clamp(2.5rem, 5vw, 5rem);
+    margin-top: clamp(3rem, 7vh, 6rem);
+    grid-template-columns: 1fr;
+  }
+  .about__read {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.35rem, 2.6vw, 2.15rem);
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    text-wrap: pretty;
+  }
+  .about__read .word {
+    display: inline-block;
+    white-space: pre;
+  }
+
+  .about__side {
+    display: grid;
+    gap: 2.5rem;
+    align-content: start;
+  }
+  .about__block {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    border-top: 1px solid var(--color-line);
+    padding-top: 1.25rem;
+  }
+  .about__block ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    font-size: 1rem;
+    color: var(--color-fg);
+  }
+  .about__tags {
+    flex-direction: row !important;
+    flex-wrap: wrap;
+    gap: 0.5rem !important;
+  }
+  .about__tags li {
+    border: 1px solid var(--color-line-strong);
+    border-radius: 999px;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.85rem;
+    color: var(--color-fg-dim);
+  }
+
+  @media (min-width: 900px) {
+    .about__grid {
+      grid-template-columns: 1.7fr 1fr;
+      align-items: start;
+    }
+  }
+</style>

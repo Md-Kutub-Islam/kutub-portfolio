@@ -1,0 +1,516 @@
+---
+/**
+ * Abstract, CSS-only product previews — intentional visual identity per project
+ * without faking screenshots. Purely decorative (aria-hidden); all real
+ * information lives in the surrounding text.
+ */
+interface Props {
+  type: 'braindump' | 'replyzen' | 'krafon' | 'cpaas' | 'edtech';
+  class?: string;
+}
+const { type, class: cls = '' } = Astro.props;
+---
+
+<div class:list={['pv', `pv--${type}`, cls]} aria-hidden="true" data-pv>
+  {
+    type === 'braindump' && (
+      <div class="pv__frame">
+        <div class="pv__bar">
+          <span class="pv__tt">Brain Dump</span>
+          <span class="pv__chip">AI</span>
+        </div>
+        <div class="pv__board">
+          {['Today', 'Tomorrow', 'This week', 'Someday'].map((c, i) => (
+            <div class:list={['pv__col', { 'is-active': i === 0 }]}>
+              <span class="pv__col-h">{c}</span>
+              {Array.from({ length: 3 - (i % 2) }).map((_, r) => (
+                <span class="pv__task" style={`--w:${70 - r * 12 - i * 4}%`}>
+                  <i class="pv__dot" />
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  {
+    type === 'replyzen' && (
+      <div class="pv__frame">
+        <div class="pv__flow">
+          <div class="pv__node">
+            <span class="pv__node-k">Comment</span>
+            <span class="pv__line" style="--w:64%" />
+          </div>
+          <span class="pv__conn" />
+          <div class="pv__node pv__node--trigger">
+            <span class="pv__node-k">Keyword trigger</span>
+            <span class="pv__pill">“price”</span>
+          </div>
+          <span class="pv__conn" />
+          <div class="pv__node pv__node--dm">
+            <span class="pv__node-k">Auto-DM</span>
+            <div class="pv__bubbles">
+              <span class="pv__bubble" style="--w:78%" />
+              <span class="pv__bubble pv__bubble--out" style="--w:56%" />
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  {
+    type === 'cpaas' && (
+      <div class="pv__frame">
+        <div class="pv__bar">
+          <span class="pv__tt">CPaaS</span>
+          <span class="pv__chip">RCS</span>
+        </div>
+        <div class="pv__channels">
+          {['SMS', 'Voice', 'RCS', 'WhatsApp'].map((c, i) => (
+            <span class:list={['pv__ch', { 'is-active': i === 2 }]}>{c}</span>
+          ))}
+        </div>
+        <div class="pv__rcs">
+          <div class="pv__rcard">
+            <span class="pv__rcard-media" />
+            <span class="pv__line" style="--w:82%" />
+            <span class="pv__line" style="--w:58%" />
+            <div class="pv__rbtns">
+              <span class="pv__rbtn" />
+              <span class="pv__rbtn" />
+            </div>
+          </div>
+          <div class="pv__rcard pv__rcard--peek">
+            <span class="pv__rcard-media" />
+            <span class="pv__line" style="--w:70%" />
+            <span class="pv__line" style="--w:44%" />
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  {
+    type === 'edtech' && (
+      <div class="pv__frame pv__frame--center">
+        <div class="pv__bar">
+          <span class="pv__tt">Lighthouse</span>
+          <span class="pv__chip">+30</span>
+        </div>
+        <div class="pv__score">
+          <span class="pv__score-from">&lt; 60</span>
+          <span class="pv__score-arrow">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path
+                d="M12 5v14M6 13l6 6 6-6"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+          <span class="pv__score-to">90+</span>
+          <span class="pv__score-label">Accessibility / Performance</span>
+        </div>
+        <div class="pv__gauge">
+          <span class="pv__gauge-track"><i class="pv__gauge-fill" /></span>
+        </div>
+      </div>
+    )
+  }
+
+  {
+    type === 'krafon' && (
+      <div class="pv__frame">
+        <div class="pv__sched">
+          <div class="pv__week">
+            {Array.from({ length: 7 }).map((_, i) => (
+              <span class:list={['pv__day', { 'has-post': i === 1 || i === 4 }]}>
+                <i />
+              </span>
+            ))}
+          </div>
+          <div class="pv__post">
+            <span class="pv__thumb" />
+            <div class="pv__post-body">
+              <span class="pv__line" style="--w:82%" />
+              <span class="pv__line" style="--w:60%" />
+              <div class="pv__platforms">
+                <i /><i /><i />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+</div>
+
+<style>
+  .pv {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius-card);
+    background:
+      radial-gradient(120% 120% at 100% 0%, color-mix(in oklab, var(--color-accent) 6%, transparent), transparent 55%),
+      var(--color-bg-soft);
+    border: 1px solid var(--color-line);
+    overflow: hidden;
+    container-type: inline-size;
+  }
+  .pv {
+    position: relative;
+  }
+  .pv__frame {
+    position: absolute;
+    inset: clamp(1rem, 4cqi, 2.4rem);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .pv__frame--center {
+    justify-content: space-between;
+  }
+
+  .pv__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .pv__tt {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(0.8rem, 2.6cqi, 1.05rem);
+    color: var(--color-fg);
+  }
+  .pv__chip {
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    padding: 0.22rem 0.5rem;
+    border-radius: 999px;
+    background: var(--color-accent);
+    color: var(--color-bg);
+    font-weight: 700;
+  }
+
+  /* Brain Dump board */
+  .pv__board {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(0.4rem, 1.6cqi, 0.8rem);
+  }
+  .pv__col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.6rem;
+    border-radius: 12px;
+    background: color-mix(in oklab, var(--color-fg) 3%, transparent);
+    border: 1px solid var(--color-line);
+  }
+  .pv__col.is-active {
+    border-color: color-mix(in oklab, var(--color-accent) 40%, transparent);
+    background: color-mix(in oklab, var(--color-accent) 7%, transparent);
+  }
+  .pv__col-h {
+    font-size: clamp(0.5rem, 1.7cqi, 0.68rem);
+    letter-spacing: 0.06em;
+    color: var(--color-fg-dim);
+    text-transform: uppercase;
+  }
+  .pv__task {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    height: 8px;
+  }
+  .pv__task::after {
+    content: '';
+    height: 6px;
+    width: var(--w, 60%);
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--color-fg) 18%, transparent);
+  }
+  .pv__dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 999px;
+    border: 1.5px solid var(--color-muted);
+    flex: none;
+  }
+  .pv__col.is-active .pv__dot {
+    border-color: var(--color-accent);
+  }
+
+  /* ReplyZen flow */
+  .pv__flow {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    gap: 0.4rem;
+  }
+  .pv__node {
+    border: 1px solid var(--color-line);
+    border-radius: 12px;
+    background: color-mix(in oklab, var(--color-fg) 3%, transparent);
+    padding: 0.7rem 0.85rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .pv__node-k {
+    font-size: clamp(0.55rem, 1.9cqi, 0.72rem);
+    letter-spacing: 0.05em;
+    color: var(--color-fg-dim);
+  }
+  .pv__node--trigger {
+    border-color: color-mix(in oklab, var(--color-accent) 35%, transparent);
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .pv__pill {
+    font-size: 0.62rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    background: var(--color-accent);
+    color: var(--color-bg);
+    font-weight: 600;
+  }
+  .pv__line {
+    height: 6px;
+    width: var(--w, 60%);
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--color-fg) 16%, transparent);
+    display: block;
+  }
+  .pv__conn {
+    width: 1px;
+    height: clamp(0.7rem, 3cqi, 1.4rem);
+    background: var(--color-line-strong);
+    margin-inline: auto;
+  }
+  .pv__bubbles {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .pv__bubble {
+    height: 10px;
+    width: var(--w, 60%);
+    border-radius: 999px 999px 999px 3px;
+    background: color-mix(in oklab, var(--color-fg) 14%, transparent);
+  }
+  .pv__bubble--out {
+    align-self: flex-end;
+    border-radius: 999px 999px 3px 999px;
+    background: color-mix(in oklab, var(--color-accent) 40%, transparent);
+  }
+
+  /* CPaaS — channels + RCS rich card / carousel */
+  .pv__channels {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .pv__ch {
+    font-size: clamp(0.5rem, 1.7cqi, 0.68rem);
+    letter-spacing: 0.04em;
+    padding: 0.3rem 0.62rem;
+    border-radius: 999px;
+    border: 1px solid var(--color-line);
+    background: color-mix(in oklab, var(--color-fg) 3%, transparent);
+    color: var(--color-fg-dim);
+  }
+  .pv__ch.is-active {
+    border-color: color-mix(in oklab, var(--color-accent) 40%, transparent);
+    background: color-mix(in oklab, var(--color-accent) 10%, transparent);
+    color: var(--color-fg);
+  }
+  .pv__rcs {
+    flex: 1;
+    display: flex;
+    gap: 0.7rem;
+    align-items: stretch;
+    min-height: 0;
+  }
+  .pv__rcard {
+    flex: 1 1 62%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.7rem;
+    border-radius: 12px;
+    border: 1px solid var(--color-line);
+    background: color-mix(in oklab, var(--color-fg) 3%, transparent);
+  }
+  .pv__rcard--peek {
+    flex: 0 0 26%;
+    opacity: 0.5;
+  }
+  .pv__rcard-media {
+    height: 42%;
+    min-height: 34px;
+    border-radius: 8px;
+    background: linear-gradient(
+      135deg,
+      color-mix(in oklab, var(--color-fg) 14%, transparent),
+      color-mix(in oklab, var(--color-accent) 24%, transparent)
+    );
+  }
+  .pv__rbtns {
+    margin-top: auto;
+    display: flex;
+    gap: 0.4rem;
+  }
+  .pv__rbtn {
+    flex: 1;
+    height: 12px;
+    border-radius: 999px;
+    border: 1px solid var(--color-line-strong);
+  }
+  .pv__rbtn:first-child {
+    background: color-mix(in oklab, var(--color-accent) 24%, transparent);
+    border-color: transparent;
+  }
+
+  /* EdTech — before → after score */
+  .pv__score {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    text-align: center;
+  }
+  .pv__score-from {
+    font-family: var(--font-sans);
+    font-variant-numeric: tabular-nums;
+    font-size: clamp(0.8rem, 3cqi, 1.15rem);
+    color: var(--color-muted);
+    text-decoration: line-through;
+    text-decoration-color: color-mix(in oklab, var(--color-muted) 55%, transparent);
+  }
+  .pv__score-arrow {
+    display: grid;
+    place-items: center;
+    color: var(--color-fg-dim);
+  }
+  .pv__score-arrow svg {
+    width: clamp(14px, 4.5cqi, 22px);
+    height: clamp(14px, 4.5cqi, 22px);
+  }
+  .pv__score-to {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 0.9;
+    font-size: clamp(2.2rem, 14cqi, 4.6rem);
+    color: var(--color-accent);
+  }
+  .pv__score-label {
+    margin-top: 0.2rem;
+    font-family: var(--font-sans);
+    font-size: clamp(0.5rem, 1.7cqi, 0.66rem);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-fg-dim);
+  }
+  .pv__gauge-track {
+    display: block;
+    height: 8px;
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--color-fg) 8%, transparent);
+    overflow: hidden;
+  }
+  .pv__gauge-fill {
+    display: block;
+    height: 100%;
+    width: 92%;
+    border-radius: 999px;
+    background: linear-gradient(
+      90deg,
+      color-mix(in oklab, var(--color-accent) 50%, transparent),
+      var(--color-accent)
+    );
+  }
+
+  /* Krafon scheduler */
+  .pv__sched {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    justify-content: center;
+  }
+  .pv__week {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.35rem;
+  }
+  .pv__day {
+    aspect-ratio: 1;
+    border-radius: 7px;
+    border: 1px solid var(--color-line);
+    background: color-mix(in oklab, var(--color-fg) 3%, transparent);
+    display: grid;
+    place-items: center;
+  }
+  .pv__day i {
+    width: 5px;
+    height: 5px;
+    border-radius: 999px;
+    background: var(--color-faint);
+  }
+  .pv__day.has-post {
+    border-color: color-mix(in oklab, var(--color-accent) 40%, transparent);
+  }
+  .pv__day.has-post i {
+    background: var(--color-accent);
+  }
+  .pv__post {
+    display: flex;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    border: 1px solid var(--color-line);
+    border-radius: 12px;
+    background: color-mix(in oklab, var(--color-fg) 3%, transparent);
+  }
+  .pv__thumb {
+    width: clamp(2.2rem, 12cqi, 3.6rem);
+    aspect-ratio: 1;
+    border-radius: 8px;
+    background: linear-gradient(135deg, color-mix(in oklab, var(--color-fg) 14%, transparent), color-mix(in oklab, var(--color-accent) 22%, transparent));
+    flex: none;
+  }
+  .pv__post-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    justify-content: center;
+  }
+  .pv__platforms {
+    display: flex;
+    gap: 0.4rem;
+    margin-top: 0.15rem;
+  }
+  .pv__platforms i {
+    width: 14px;
+    height: 14px;
+    border-radius: 999px;
+    border: 1px solid var(--color-line-strong);
+  }
+  .pv__platforms i:first-child {
+    background: color-mix(in oklab, var(--color-accent) 30%, transparent);
+    border-color: transparent;
+  }
+</style>

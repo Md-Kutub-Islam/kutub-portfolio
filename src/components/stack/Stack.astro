@@ -1,0 +1,115 @@
+---
+import { STACK } from '@data/stack';
+import SectionHeading from '@components/ui/SectionHeading.astro';
+---
+
+<section id="stack" class="section wrap stack">
+  <SectionHeading
+    index="03"
+    label="Stack"
+    lines={['The tools', 'I build with.']}
+    note="No bars · just what I use"
+  />
+
+  <div class="stack__groups">
+    {
+      STACK.map((group, gi) => (
+        <div class="stack__group" data-reveal style={`--reveal-delay:${gi * 70}ms`}>
+          <div class="stack__label">
+            <span class="eyebrow">{group.label}</span>
+            <span class="stack__count metanum" aria-hidden="true">
+              {String(group.items.length).padStart(2, '0')}
+            </span>
+          </div>
+          <ul class="stack__items">
+            {group.items.map((t) => (
+              <li class="tech">
+                <span class="tech__name">{t.name}</span>
+                {t.note && <span class="tech__note">{t.note}</span>}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .stack__groups {
+    margin-top: clamp(3rem, 7vh, 6rem);
+    display: grid;
+    gap: 0;
+  }
+  .stack__group {
+    display: grid;
+    gap: 1.25rem 3rem;
+    padding-block: clamp(1.75rem, 4vh, 2.75rem);
+    border-top: 1px solid var(--color-line);
+    grid-template-columns: 1fr;
+  }
+  .stack__group:last-child {
+    border-bottom: 1px solid var(--color-line);
+  }
+  .stack__label {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .stack__count {
+    color: var(--color-faint);
+    font-size: 0.8rem;
+  }
+
+  .stack__items {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1.4rem 1.75rem;
+  }
+  .tech {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    border-left: 1px solid transparent;
+    padding-left: 0;
+    transition: border-color 0.35s var(--ease-out), padding-left 0.35s var(--ease-out);
+  }
+  .tech__name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.2rem, 2.4vw, 1.85rem);
+    letter-spacing: -0.02em;
+    color: var(--color-fg-dim);
+    transition: color 0.3s var(--ease-out);
+  }
+  .tech__note {
+    font-size: 0.78rem;
+    letter-spacing: 0.02em;
+    color: var(--color-muted);
+    transition: color 0.3s var(--ease-out);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .tech:hover {
+      border-color: var(--color-accent);
+      padding-left: 0.9rem;
+    }
+    .tech:hover .tech__name {
+      color: var(--color-fg);
+    }
+    .tech:hover .tech__note {
+      color: var(--color-fg-dim);
+    }
+  }
+
+  @media (min-width: 860px) {
+    .stack__group {
+      grid-template-columns: 220px 1fr;
+      align-items: start;
+    }
+    .stack__label {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  }
+</style>

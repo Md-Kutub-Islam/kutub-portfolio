@@ -1,0 +1,67 @@
+---
+import Arrow from './Arrow.astro';
+/**
+ * Magnetic button/link. The wrapper is nudged toward the cursor (desktop,
+ * fine-pointer, motion-allowed only — handled in motion.ts). Renders as <a>
+ * when `href` is set, otherwise <button>.
+ */
+interface Props {
+  href?: string;
+  label: string;
+  variant?: 'solid' | 'ghost';
+  class?: string;
+  arrow?: 'right' | 'down' | 'up-right' | false;
+  external?: boolean;
+  cursorView?: boolean;
+  ariaLabel?: string;
+}
+const {
+  href,
+  label,
+  variant = 'solid',
+  class: cls = '',
+  arrow = 'right',
+  external = false,
+  cursorView = false,
+  ariaLabel,
+} = Astro.props;
+
+const btnClass = variant === 'ghost' ? 'btn btn--ghost' : 'btn';
+const rel = external ? 'noopener noreferrer' : undefined;
+const target = external ? '_blank' : undefined;
+const Tag = href ? 'a' : 'button';
+---
+
+<Tag
+  class:list={['magnetic', cls]}
+  href={href}
+  rel={rel}
+  target={target}
+  data-magnetic
+  data-cursor={cursorView ? 'view' : undefined}
+  aria-label={ariaLabel}
+>
+  <span class={btnClass} data-magnetic-inner>
+    <span>{label}</span>
+    {arrow && <Arrow dir={arrow} class="btn-arrow" />}
+  </span>
+</Tag>
+
+<style>
+  .magnetic {
+    display: inline-block;
+    transition: transform 0.4s var(--ease-out);
+    will-change: transform;
+  }
+  .magnetic [data-magnetic-inner] {
+    transition: transform 0.4s var(--ease-out);
+  }
+  .btn-arrow {
+    transition: transform 0.3s var(--ease-out);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .magnetic:hover .btn-arrow {
+      transform: translateX(4px);
+    }
+  }
+</style>

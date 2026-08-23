@@ -1,0 +1,168 @@
+---
+import { PROCESS } from '@data/process';
+---
+
+<section id="process" class="section wrap process-sec">
+  <div class="flex items-center justify-between gap-4 border-t border-line pt-5" data-reveal>
+    <span class="sec-index metanum">
+      <span class="text-faint">✳</span>
+      <span class="mx-2">HOW I BUILD</span>
+    </span>
+    <span class="sec-index metanum hidden sm:block">Process</span>
+  </div>
+
+  <div class="process" data-process data-active="0">
+    <div class="process__sticky">
+      <div class="process__nums" aria-hidden="true">
+        {
+          PROCESS.map((s, i) => (
+            <span class="process__bignum display" data-i={i}>
+              {s.num}
+            </span>
+          ))
+        }
+      </div>
+      <ul class="process__ghosts" aria-hidden="true">
+        {
+          PROCESS.map((s, i) => (
+            <li class="process__ghost" data-i={i}>
+              {s.title}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <ol class="process__stages">
+      {
+        PROCESS.map((s, i) => (
+          <li class="process__stage" data-stage={i}>
+            <span class="process__stage-num metanum">{s.num} / 04</span>
+            <h3 class="process__stage-title">{s.title}</h3>
+            <p class="process__stage-body">{s.body}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .text-faint {
+    color: var(--color-faint);
+  }
+  .process {
+    margin-top: clamp(2.5rem, 6vh, 5rem);
+    display: grid;
+    gap: clamp(2rem, 5vw, 4rem);
+    grid-template-columns: 1fr;
+  }
+
+  /* Left sticky readout */
+  .process__sticky {
+    display: none;
+  }
+  .process__nums {
+    position: relative;
+    height: clamp(6rem, 12vw, 11rem);
+  }
+  .process__bignum {
+    position: absolute;
+    inset: 0;
+    font-size: clamp(6rem, 12vw, 11rem);
+    line-height: 1;
+    color: var(--color-fg);
+    opacity: 0;
+    transform: translateY(0.2em);
+    transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out);
+  }
+  .process__ghosts {
+    margin-top: 2rem;
+    display: grid;
+    gap: 0.75rem;
+  }
+  .process__ghost {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.2rem, 2vw, 1.6rem);
+    letter-spacing: -0.02em;
+    color: var(--color-faint);
+    transition: color 0.4s var(--ease-out), transform 0.4s var(--ease-out);
+  }
+
+  /* active state driven by [data-active] on .process */
+  .process[data-active='0'] .process__bignum[data-i='0'],
+  .process[data-active='1'] .process__bignum[data-i='1'],
+  .process[data-active='2'] .process__bignum[data-i='2'],
+  .process[data-active='3'] .process__bignum[data-i='3'] {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .process[data-active='0'] .process__ghost[data-i='0'],
+  .process[data-active='1'] .process__ghost[data-i='1'],
+  .process[data-active='2'] .process__ghost[data-i='2'],
+  .process[data-active='3'] .process__ghost[data-i='3'] {
+    color: var(--color-fg);
+    transform: translateX(0.5rem);
+  }
+
+  /* Right: stages */
+  .process__stages {
+    display: grid;
+    gap: 0;
+  }
+  .process__stage {
+    padding-block: clamp(2rem, 5vh, 3.5rem);
+    border-top: 1px solid var(--color-line);
+    transition: opacity 0.4s var(--ease-out);
+  }
+  .process__stage:last-child {
+    border-bottom: 1px solid var(--color-line);
+  }
+  .process__stage-num {
+    font-size: 0.8rem;
+    color: var(--color-muted);
+  }
+  .process__stage-title {
+    margin-top: 0.9rem;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+  .process__stage-body {
+    margin-top: 1.1rem;
+    max-width: 46ch;
+    color: var(--color-fg-dim);
+    font-size: clamp(1rem, 1.5vw, 1.15rem);
+    line-height: 1.6;
+    text-wrap: pretty;
+  }
+
+  @media (min-width: 1024px) {
+    .process {
+      grid-template-columns: 0.85fr 1.15fr;
+      align-items: start;
+    }
+    .process__sticky {
+      display: block;
+      position: sticky;
+      top: 22vh;
+    }
+    .process__stage {
+      min-height: 58vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-top: 0;
+    }
+    .process__stage:last-child {
+      border-bottom: 0;
+    }
+    /* Dim non-current stages on desktop for focus (JS-driven only) */
+    :global(html.js) .process__stage:not([data-current]) {
+      opacity: 0.4;
+    }
+  }
+</style>

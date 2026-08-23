@@ -1,0 +1,424 @@
+---
+import Layout from '@layouts/Layout.astro';
+import { PROJECTS } from '@data/projects';
+import { SITE, has } from '@data/site';
+import ProjectPreview from '@components/projects/ProjectPreview.astro';
+import RevealText from '@components/ui/RevealText.astro';
+import MagneticButton from '@components/ui/MagneticButton.astro';
+import Arrow from '@components/ui/Arrow.astro';
+
+export function getStaticPaths() {
+  return PROJECTS.map((project, i) => {
+    const next = PROJECTS[(i + 1) % PROJECTS.length];
+    return { params: { slug: project.slug }, props: { project, next } };
+  });
+}
+
+const { project, next } = Astro.props;
+const {
+  slug,
+  index,
+  title,
+  subtitle,
+  summary,
+  description,
+  role,
+  context,
+  year,
+  status,
+  features,
+  stack,
+  liveUrl,
+  repoUrl,
+  accentPreview,
+  kind,
+  company,
+  nda,
+  metric,
+} = project;
+
+const pageTitle = `${title} — ${SITE.name}`;
+const meta = [
+  { k: 'Year', v: year },
+  { k: 'Status', v: status },
+  { k: 'Role', v: role },
+  ...(context ? [{ k: 'Context', v: context }] : []),
+];
+---
+
+<Layout title={pageTitle} description={summary} type="article">
+  <article class="detail">
+    <div class="wrap">
+      <a href="/#work" class="detail__back link" data-astro-prefetch>
+        <Arrow dir="left" size={16} /> Back to work
+      </a>
+
+      <header class="detail__head">
+        <div class="detail__topline">
+          <span class="metanum detail__idx">{index}</span>
+          <span class="detail__status" data-status={status}>{status}</span>
+          <span class:list={['detail__kind', kind === 'personal' ? 'is-personal' : 'is-pro']}>
+            <span class="detail__kind-dot" aria-hidden="true"></span>
+            {kind === 'personal'
+              ? 'Personal product'
+              : `${company ?? 'Professional'} · Professional work`}
+          </span>
+        </div>
+        <h1 class="detail__title display">
+          <RevealText as="span" lines={[title]} />
+        </h1>
+        <p class="detail__subtitle" data-reveal style="--reveal-delay:80ms">{subtitle}</p>
+      </header>
+
+      <div class="detail__visual" transition:name={`pv-${slug}`}>
+        <ProjectPreview type={accentPreview} />
+      </div>
+
+      <div class="detail__grid">
+        <div class="detail__body">
+          <p class="detail__lead" data-reveal>{summary}</p>
+
+          {metric && (
+            <div class="detail__metric" data-reveal style="--reveal-delay:40ms">
+              <span class="detail__metric-nums">
+                <span class="detail__metric-from">{metric.from}</span>
+                <span class="detail__metric-arrow" aria-hidden="true"><Arrow dir="right" size={30} /></span>
+                <span class="detail__metric-to">{metric.to}</span>
+              </span>
+              <span class="detail__metric-label">{metric.label}</span>
+            </div>
+          )}
+
+          <p class="detail__desc" data-reveal style="--reveal-delay:60ms">{description}</p>
+
+          <div class="detail__actions" data-reveal style="--reveal-delay:120ms">
+            {has(liveUrl) && (
+              <MagneticButton href={liveUrl} label="Visit live" arrow="up-right" external />
+            )}
+            {has(repoUrl) && (
+              <MagneticButton
+                href={repoUrl}
+                label="View code"
+                arrow="up-right"
+                external
+                variant={has(liveUrl) ? 'ghost' : 'solid'}
+              />
+            )}
+            {!has(liveUrl) && !has(repoUrl) && (
+              <p class="detail__private">
+                {nda
+                  ? 'NDA-protected professional work — presented through publicly safe technical contribution only. Happy to walk through it on request. '
+                  : 'Private build — available to walk through on request. '}
+                <a class="link" href={`mailto:${SITE.email}`}>Get in touch</a>.
+              </p>
+            )}
+          </div>
+        </div>
+
+        <aside class="detail__aside">
+          <dl class="detail__meta">
+            {meta.map((m) => (
+              <div class="detail__meta-row">
+                <dt class="eyebrow">{m.k}</dt>
+                <dd>{m.v}</dd>
+              </div>
+            ))}
+          </dl>
+        </aside>
+      </div>
+
+      <section class="detail__section" aria-labelledby="feat-h">
+        <h2 id="feat-h" class="detail__section-h">What it does</h2>
+        <ul class="detail__features">
+          {features.map((f, i) => (
+            <li data-reveal style={`--reveal-delay:${(i % 4) * 50}ms`}>
+              <span class="detail__feat-num metanum">{String(i + 1).padStart(2, '0')}</span>
+              <span>{f}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section class="detail__section" aria-labelledby="stack-h">
+        <h2 id="stack-h" class="detail__section-h">Built with</h2>
+        <ul class="detail__stack">
+          {stack.map((s) => <li>{s}</li>)}
+        </ul>
+      </section>
+
+      <a href={`/projects/${next.slug}`} class="detail__next" data-astro-prefetch>
+        <span class="detail__next-k eyebrow">Next project</span>
+        <span class="detail__next-title display">{next.title}</span>
+        <span class="detail__next-ico" aria-hidden="true"><Arrow dir="up-right" size={32} /></span>
+      </a>
+    </div>
+  </article>
+</Layout>
+
+<style>
+  .detail {
+    padding-top: calc(72px + clamp(2rem, 6vh, 4rem));
+    padding-bottom: clamp(3rem, 8vh, 6rem);
+  }
+  .detail__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--color-fg-dim);
+  }
+
+  .detail__head {
+    margin-top: clamp(2rem, 5vh, 3.5rem);
+  }
+  .detail__topline {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
+    margin-bottom: 1.2rem;
+  }
+  .detail__kind {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.85rem;
+    border-radius: 999px;
+    border: 1px solid var(--color-line);
+    font-size: 0.74rem;
+    letter-spacing: 0.06em;
+    line-height: 1;
+  }
+  .detail__kind-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    flex: none;
+  }
+  .detail__kind.is-personal {
+    color: var(--color-fg);
+    border-color: color-mix(in oklab, var(--color-accent) 45%, transparent);
+    background: color-mix(in oklab, var(--color-accent) 8%, transparent);
+  }
+  .detail__kind.is-personal .detail__kind-dot {
+    background: var(--color-accent);
+  }
+  .detail__kind.is-pro {
+    color: var(--color-fg-dim);
+    background: color-mix(in oklab, var(--color-fg) 3%, transparent);
+  }
+  .detail__kind.is-pro .detail__kind-dot {
+    background: var(--color-muted);
+  }
+  .detail__idx {
+    color: var(--color-muted);
+  }
+  .detail__status {
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    color: var(--color-fg-dim);
+  }
+  .detail__status[data-status='Live'] {
+    color: var(--color-accent);
+  }
+  .detail__title {
+    font-size: clamp(3rem, 11vw, 9rem);
+    letter-spacing: -0.045em;
+    line-height: 0.9;
+  }
+  .detail__subtitle {
+    margin-top: 1.2rem;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.15rem, 2.4vw, 1.7rem);
+    color: var(--color-fg-dim);
+    max-width: 40ch;
+  }
+
+  .detail__visual {
+    margin-top: clamp(2.5rem, 6vh, 4.5rem);
+    max-width: 900px;
+    margin-inline: auto;
+  }
+
+  .detail__grid {
+    margin-top: clamp(3rem, 8vh, 6rem);
+    display: grid;
+    gap: clamp(2rem, 5vw, 4rem);
+    grid-template-columns: 1fr;
+  }
+  .detail__lead {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.3rem, 2.6vw, 1.9rem);
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    color: var(--color-fg);
+    text-wrap: pretty;
+  }
+  .detail__desc {
+    margin-top: 1.5rem;
+    max-width: 62ch;
+    color: var(--color-fg-dim);
+    font-size: clamp(1rem, 1.5vw, 1.12rem);
+    line-height: 1.65;
+    text-wrap: pretty;
+  }
+  .detail__metric {
+    margin-top: 1.75rem;
+    display: inline-flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 1.3rem 1.6rem;
+    border: 1px solid var(--color-line-strong);
+    border-radius: 18px;
+    background: color-mix(in oklab, var(--color-accent) 4%, transparent);
+  }
+  .detail__metric-nums {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    font-family: var(--font-display);
+    font-variant-numeric: tabular-nums;
+    line-height: 0.9;
+  }
+  .detail__metric-from {
+    font-size: clamp(1.3rem, 3vw, 2rem);
+    font-weight: 600;
+    color: var(--color-muted);
+    text-decoration: line-through;
+    text-decoration-color: color-mix(in oklab, var(--color-muted) 55%, transparent);
+  }
+  .detail__metric-arrow {
+    display: grid;
+    place-items: center;
+    color: var(--color-fg-dim);
+  }
+  .detail__metric-to {
+    font-size: clamp(3rem, 8vw, 5.5rem);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    color: var(--color-accent);
+  }
+  .detail__metric-label {
+    font-family: var(--font-sans);
+    font-size: 0.74rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-fg-dim);
+  }
+  .detail__actions {
+    margin-top: 2.25rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.5rem;
+  }
+  .detail__private {
+    color: var(--color-fg-dim);
+    font-size: 0.95rem;
+    max-width: 44ch;
+    line-height: 1.55;
+  }
+  .detail__private .link {
+    color: var(--color-fg);
+  }
+
+  .detail__meta {
+    display: grid;
+    gap: 1.25rem;
+    border-top: 1px solid var(--color-line);
+    padding-top: 1.5rem;
+  }
+  .detail__meta-row {
+    display: grid;
+    gap: 0.35rem;
+  }
+  .detail__meta-row dd {
+    color: var(--color-fg);
+    font-size: 1rem;
+  }
+
+  .detail__section {
+    margin-top: clamp(3rem, 8vh, 6rem);
+    border-top: 1px solid var(--color-line);
+    padding-top: clamp(1.75rem, 4vh, 2.75rem);
+  }
+  .detail__section-h {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+    letter-spacing: -0.03em;
+    margin-bottom: 1.75rem;
+  }
+  .detail__features {
+    display: grid;
+    gap: 1rem 2.5rem;
+    grid-template-columns: 1fr;
+  }
+  .detail__features li {
+    display: flex;
+    gap: 1rem;
+    align-items: baseline;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--color-line);
+    color: var(--color-fg-dim);
+    line-height: 1.5;
+  }
+  .detail__feat-num {
+    color: var(--color-muted);
+    font-size: 0.8rem;
+    flex: none;
+  }
+  .detail__stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+  .detail__stack li {
+    border: 1px solid var(--color-line-strong);
+    border-radius: 999px;
+    padding: 0.5rem 1rem;
+    font-size: 0.88rem;
+    color: var(--color-fg-dim);
+  }
+
+  .detail__next {
+    margin-top: clamp(3.5rem, 9vh, 7rem);
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    border-top: 1px solid var(--color-line);
+    padding-top: clamp(2rem, 5vh, 3.5rem);
+  }
+  .detail__next-k {
+    flex: none;
+  }
+  .detail__next-title {
+    font-size: clamp(2rem, 6vw, 4rem);
+    letter-spacing: -0.03em;
+    transition: color 0.3s var(--ease-out);
+  }
+  .detail__next-ico {
+    margin-left: auto;
+    transition: transform 0.4s var(--ease-out);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .detail__next:hover .detail__next-title {
+      color: var(--color-accent);
+    }
+    .detail__next:hover .detail__next-ico {
+      transform: translate(6px, -6px);
+    }
+  }
+
+  @media (min-width: 900px) {
+    .detail__grid {
+      grid-template-columns: 1.6fr 1fr;
+      align-items: start;
+    }
+    .detail__features {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>

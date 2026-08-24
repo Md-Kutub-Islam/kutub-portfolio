@@ -33,7 +33,7 @@ const {
   metric,
 } = project;
 
-const detailHref = `/projects/${slug}`;
+const detailHref = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/projects/${slug}`;
 const topFeatures = features.slice(0, 4);
 const topStack = stack.slice(0, 6);
 const moreStack = stack.length - topStack.length;

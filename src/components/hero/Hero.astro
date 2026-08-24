@@ -36,7 +36,7 @@ import Arrow from '@components/ui/Arrow.astro';
       <div class="hero__photo-wrapper" data-reveal="photo" style="--reveal-delay:880ms" data-hero-parallax>
         <div class="hero__photo-card">
           <img
-            src="/images/profile.jpg"
+            src={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/images/profile.jpg`}
             alt="Md Kutub Islam — Frontend & Full-Stack Engineer"
             class="hero__photo-img"
             loading="eager"

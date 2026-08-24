@@ -15,18 +15,20 @@ export const SITE = {
   openTo: 'Open to opportunities',
   email: 'mdkutubislam09@gmail.com',
   // Canonical origin — keep in sync with `site` in astro.config.mjs
-  url: 'https://mdkutubislam.com',
+  url: 'https://md-kutub-islam.github.io/kutub-portfolio',
   title: 'Md Kutub Islam — Frontend Engineer & Full-Stack Developer',
   description:
     'Frontend Engineer and full-stack capable developer building modern SaaS products, web applications and AI-powered experiences with Vue.js, React.js, Node.js and PostgreSQL.',
 } as const;
+
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
 
 // Social / external profiles. Fill these in — empty strings stay hidden.
 export const LINKS: Record<'github' | 'linkedin' | 'twitter' | 'resume', string> = {
   github: 'https://github.com/Md-Kutub-Islam',
   linkedin: 'https://www.linkedin.com/in/md-kutub-islam-623916262/',
   twitter: 'https://x.com/devkutub',
-  resume: '/Kutub_Islam_Frontend_Engineer_Resume.pdf',
+  resume: `${base}Kutub_Islam_Frontend_Engineer_Resume.pdf`,
 };
 
 export type NavItem = { num: string; label: string; href: string };
